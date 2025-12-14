@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>تفاصيل اليتيم</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="translations.js"></script>
+  </head>
+  <body>
+      <nav id="mainNavbar" class="navbar" aria-label="Main navigation"></nav>
+    <div class="page-certificate">
+      <header class="header-certificate">
+        <div class="top-strip">
+          <div class="title" data-i18n="orgName">كفالة أطفال غزة</div>
+        </div>
+      </header>
+
+      <main class="certificate-wrap">
+        <article id="certificate" class="certificate">
+          <div class="cert-grid">
+            <div class="form-column">
+              <h2 id="certName"></h2>
+              <div class="cert-info">
+                <p><strong>تاريخ الميلاد:</strong> <span id="certBirthday"></span></p>
+                <p><strong>الهاتف:</strong> <span id="certPhone"></span></p>
+                <p><strong>اسم الوصي:</strong> <span id="certGuardian"></span></p>
+                <p><strong>معرّف الطفل:</strong> <span id="certId"></span></p>
+                <p><strong>الموقع:</strong> <span id="certLocation"></span></p>
+                <hr>
+                <p><strong>اسم المتبرع:</strong> <span id="certDonor"></span></p>
+                <p><strong>هاتف المتبرع:</strong> <span id="certDonorPhone"></span></p>
+                <p><strong>العنوان:</strong> <span id="certDonorAddress"></span></p>
+              </div>
+            </div>
+            <div class="photo-column">
+              <div class="photo-circle">
+                <img id="certImage" alt="صورة الطفل">
+              </div>
+            </div>
+          </div>
+
+          <footer class="cert-footer">شهادة تبني رمزية — نظام تسجيل الأيتام</footer>
+        </article>
+
+        <div class="diagonal-footer" aria-hidden="true">
+          <div class="bg"></div>
+          <div class="content">
+            <div style="font-size:20px;font-weight:800" data-i18n="contactTitle">CONTACT INFORMATION</div>
+            <div class="contact-badges">
+              <div class="badge">📞 03070433414</div>
+              <div class="badge">📞 03253417595</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="page-footer-logo">
+          <img src="assets/logo.jpg" alt="logo" onerror="this.onerror=null;this.src='assets/logo.png'">
+        </div>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const params = new URLSearchParams(location.search);
+        const id = params.get('id');
+        if (!id) return document.getElementById('certificate').innerText = 'لم يتم العثور على معرّف.';
+        renderDetails(id);
+      });
+    </script>
+  </body>
+</html>

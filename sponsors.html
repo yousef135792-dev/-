@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>قائمة الكفلاء</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="translations.js"></script>
+  </head>
+  <body>
+    <nav id="mainNavbar" class="navbar" aria-label="Main navigation"></nav>
+    <div class="container">
+      <h2>الكفلاء</h2>
+      <div id="sponsorsList" class="grid"></div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', ()=>{
+        const list = getSponsors();
+        const container = document.getElementById('sponsorsList');
+        if(!container) return;
+        container.innerHTML = '';
+        if(!list.length) { container.innerHTML = '<div class="card muted">لا يوجد كفلاء بعد</div>'; return; }
+        list.forEach(s=>{
+          const card = document.createElement('div'); card.className = 'card';
+          const img = document.createElement('img'); img.src = s.image || 'assets/default-profile.svg'; img.style.width='64px'; img.style.height='64px'; img.style.objectFit='cover'; img.style.borderRadius='8px'; img.style.marginBottom='8px';
+          const h = document.createElement('h3'); h.textContent = s.name || '(بدون اسم)';
+          const count = (s.children||[]).length;
+          const p = document.createElement('p'); p.textContent = (s.phone ? s.phone + ' • ' : '') + count + ' مكفولين';
+          const btn = document.createElement('a'); btn.href = `sponsor.html?id=${encodeURIComponent(s.id)}`; btn.className='btn accent-btn'; btn.textContent='عرض الكفيل';
+          card.appendChild(img); card.appendChild(h); card.appendChild(p); card.appendChild(btn);
+          container.appendChild(card);
+        });
+      });
+    </script>
+  </body>
+</html>

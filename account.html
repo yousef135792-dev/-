@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title data-i18n="settings_sections.account">الحساب الشخصي</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="style.css">
+    <script src="translations.js"></script>
+  </head>
+  <body>
+    <nav id="mainNavbar" class="navbar"></nav>
+    <main class="container">
+      <section class="card">
+        <h2 data-i18n="settings_sections.account">الحساب الشخصي</h2>
+        <form id="accountFullForm">
+          <label data-i18n="profile_name">الاسم الكامل
+            <input type="text" id="fullName" />
+          </label>
+          <label data-i18n="profile_email">البريد الإلكتروني
+            <input type="email" id="email" />
+          </label>
+          <label data-i18n="profile_phone">الهاتف
+            <input type="tel" id="phone" />
+          </label>
+          <label data-i18n="profile_password">كلمة المرور
+            <input type="password" id="password" />
+          </label>
+          <div style="margin-top:12px">
+            <button type="button" class="btn" id="saveAccountFull">حفظ</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', ()=>{
+        if(typeof renderNavbar === 'function') renderNavbar();
+        // load existing user
+        try{ const u = JSON.parse(localStorage.getItem('site_user')||'{}'); if(u){ document.getElementById('fullName').value = u.name||''; document.getElementById('email').value = u.email||''; document.getElementById('phone').value = u.phone||''; } }catch(e){}
+        document.getElementById('saveAccountFull').addEventListener('click', ()=>{
+          const user = { name: document.getElementById('fullName').value, email: document.getElementById('email').value, phone: document.getElementById('phone').value };
+          localStorage.setItem('site_user', JSON.stringify(user));
+          alert('Saved');
+        });
+      });
+    </script>
+  </body>
+</html>

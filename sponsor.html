@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>صفحة الكفيل</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="translations.js"></script>
+  </head>
+  <body>
+    <nav id="mainNavbar" class="navbar" aria-label="Main navigation"></nav>
+    <div class="container">
+      <div id="sponsorCard" class="card"></div>
+      <h3>الأطفال المكفولون</h3>
+      <div id="sponsorChildren" class="orphans-list"></div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', ()=>{
+        const params = new URLSearchParams(location.search);
+        const id = params.get('id');
+        const card = document.getElementById('sponsorCard');
+        const childrenWrap = document.getElementById('sponsorChildren');
+        if(!id) { if(card) card.innerHTML = '<p>لم يتم تحديد الكفيل</p>'; return; }
+        const sponsors = getSponsors();
+        const s = sponsors.find(x=>x.id===id);
+        if(!s){ if(card) card.innerHTML = '<p>لم يتم العثور على الكفيل</p>'; return; }
+        if(card) card.innerHTML = `
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:120px;height:120px;border-radius:10px;overflow:hidden;border:6px solid rgba(46,139,87,0.08)">
+              <img id="s_img_preview" src="${s.image || 'assets/default-profile.svg'}" style="width:100%;height:100%;object-fit:cover">
+            </div>
+            <div>
+              <h2 id="s_name">${s.name||'(بدون اسم)'}</h2>
+              <p><strong>الهاتف:</strong> <span id="s_phone">${s.phone||''}</span></p>
+              <p><strong>العنوان:</strong> <span id="s_addr">${s.address||''}</span></p>
+              <p style="display:flex;gap:8px;margin-top:8px">
+                <a class="btn accent-btn" href="add.html?preSponsorId=${encodeURIComponent(s.id)}">إضافة طفل لكفالتك</a>
+                <button id="editSponsorBtn" class="btn secondary-btn">تعديل الكفيل</button>
+              </p>
+            </div>
+          </div>
+          <div id="editSponsorForm" style="display:none;margin-top:12px;padding:12px;border-top:1px dashed #eee">
+            <label>الاسم: <input id="editSponsorName" type="text" value="${s.name||''}"></label>
+            <label>الهاتف: <input id="editSponsorPhone" type="tel" value="${s.phone||''}"></label>
+            <label>العنوان: <input id="editSponsorAddress" type="text" value="${s.address||''}"></label>
+            <label style="display:block;margin-top:8px">تغيير صورة الكفيل: <input id="editSponsorImage" type="file" accept="image/*"></label>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="saveSponsorBtn" class="btn accent-btn">حفظ التغييرات</button>
+              <button id="cancelSponsorBtn" class="btn secondary-btn">إلغاء</button>
+            </div>
+          </div>`;
+        // list children
+        childrenWrap.innerHTML = '';
+        const all = getOrphans();
+        (s.children||[]).forEach(cid=>{
+          const o = all.find(x=>x.id===cid);
+          const row = document.createElement('div'); row.className='list-card';
+          const img = document.createElement('img'); img.className='thumb-small'; img.src = (o && o.image) ? o.image : 'assets/default-profile.svg';
+          const info = document.createElement('div'); info.className='info';
+          const a = document.createElement('a'); a.href = `details.html?id=${encodeURIComponent(cid)}`; a.textContent = (o && o.name) ? o.name : 'بدون اسم'; a.className='name-link';
+          info.appendChild(a);
+          row.appendChild(img); row.appendChild(info);
+          childrenWrap.appendChild(row);
+        });
+        // wire edit sponsor interactions
+        const editBtn = document.getElementById('editSponsorBtn');
+        const editForm = document.getElementById('editSponsorForm');
+        const saveBtn = document.getElementById('saveSponsorBtn');
+        const cancelBtn = document.getElementById('cancelSponsorBtn');
+        const imgInput = document.getElementById('editSponsorImage');
+        const imgPreview = document.getElementById('s_img_preview');
+        if(editBtn && editForm){
+          editBtn.addEventListener('click', ()=>{ editForm.style.display = editForm.style.display === 'none' ? 'block' : 'none'; });
+        }
+        if(cancelBtn){ cancelBtn.addEventListener('click', (e)=>{ e.preventDefault(); if(editForm) editForm.style.display='none'; }); }
+        if(saveBtn){
+          saveBtn.addEventListener('click', async (e)=>{
+            e.preventDefault();
+            const newName = document.getElementById('editSponsorName').value.trim();
+            const newPhone = document.getElementById('editSponsorPhone').value.trim();
+            const newAddr = document.getElementById('editSponsorAddress').value.trim();
+            let newImg = '';
+            if(imgInput && imgInput.files && imgInput.files[0]){
+              try{ newImg = await fileToBase64(imgInput.files[0]); }catch(err){ newImg = ''; }
+            }
+            // update sponsors storage
+            const sponsors = getSponsors();
+            const idx = sponsors.findIndex(x=>x.id===s.id);
+            if(idx !== -1){
+              sponsors[idx].name = newName || sponsors[idx].name;
+              sponsors[idx].phone = newPhone || sponsors[idx].phone;
+              sponsors[idx].address = newAddr || sponsors[idx].address;
+              if(newImg) sponsors[idx].image = newImg;
+              saveSponsors(sponsors);
+              // update DOM
+              if(document.getElementById('s_name')) document.getElementById('s_name').textContent = sponsors[idx].name || '';
+              if(document.getElementById('s_phone')) document.getElementById('s_phone').textContent = sponsors[idx].phone || '';
+              if(document.getElementById('s_addr')) document.getElementById('s_addr').textContent = sponsors[idx].address || '';
+              if(newImg && imgPreview) imgPreview.src = newImg;
+              // hide form
+              if(editForm) editForm.style.display = 'none';
+              // refresh sponsors select on add page if present
+              if(typeof populateSponsorsSelect === 'function') populateSponsorsSelect();
+              alert('تم حفظ بيانات الكفيل');
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

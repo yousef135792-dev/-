@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title data-i18n="settings_title">الإعدادات</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="translations.js"></script>
+  </head>
+  <body>
+    <nav id="mainNavbar" class="navbar" aria-label="Main navigation"></nav>
+    <main class="container">
+      <div class="settings-page" role="main">
+        <aside class="settings-sidebar" aria-label="Settings menu">
+          <ul id="settingsMenu">
+            <li data-section="language" class="active"><i class="fa fa-language"></i><span data-i18n="settings_sections.language">اللغة</span></li>
+            <li data-section="account"><i class="fa fa-user"></i><span data-i18n="settings_sections.account">الحساب الشخصي</span></li>
+            <li data-section="notifications"><i class="fa fa-bell"></i><span data-i18n="settings_sections.notifications">الإشعارات</span></li>
+            <li data-section="design"><i class="fa fa-paint-brush"></i><span data-i18n="settings_sections.design">التصميم / الواجهة</span></li>
+            <li data-section="advanced"><i class="fa fa-cogs"></i><span data-i18n="settings_sections.advanced">خيارات متقدمة</span></li>
+          </ul>
+        </aside>
+
+        <section class="settings-content" id="settingsContent">
+          <!-- Dynamic content will be rendered here -->
+          <div class="settings-section-header">
+            <h2 id="settingsTitle" data-i18n="settings_sections.language">اللغة</h2>
+            <div>
+              <button id="openFullPage" class="btn"> <i class="fa fa-external-link-alt"></i> <span data-i18n="settings_open_full">افتح الصفحة الكاملة</span></button>
+              <button id="backBtn" class="btn">← <span data-i18n="settings_back">رجوع</span></button>
+            </div>
+          </div>
+
+          <div id="settingsBody" style="margin-top:12px">
+            <!-- section-specific content inserted here -->
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+      // Render settings interactions
+      document.addEventListener('DOMContentLoaded', ()=>{
+        if(typeof renderNavbar === 'function') renderNavbar();
+        const menu = document.getElementById('settingsMenu');
+        const items = menu.querySelectorAll('li');
+        function activate(section){
+          items.forEach(li=>li.classList.toggle('active', li.dataset.section===section));
+          renderSettingsSection(section);
+          // update title and 'open full page' link
+          const titleKey = 'settings_sections.' + section;
+          const titleEl = document.getElementById('settingsTitle');
+          if(window.TRANSLATIONS && TRANSLATIONS[currentLang()]){
+            const t = TRANSLATIONS[currentLang()];
+            if(t.settings_sections && t.settings_sections[section]) titleEl.textContent = t.settings_sections[section];
+          }
+          document.getElementById('openFullPage').onclick = ()=>{ location.href = section + '.html'; };
+        }
+        items.forEach(li=> li.addEventListener('click', ()=> activate(li.dataset.section)));
+        // default render
+        activate('language');
+
+        // back button
+        document.getElementById('backBtn').addEventListener('click', ()=> history.back());
+      });
+    </script>
+  </body>
+</html>

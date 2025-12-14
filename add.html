@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>إضافة يتيم جديد</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="translations.js"></script>
+  </head>
+  <body>
+    <nav id="mainNavbar" class="navbar" aria-label="Main navigation"></nav>
+    <div class="page-certificate">
+      <header class="header-certificate">
+        <div class="top-strip">
+          <div class="title" data-i18n="orgName">كفالة أطفال غزة</div>
+        </div>
+      </header>
+
+      <main class="certificate-wrap">
+        <form id="orphanForm" class="certificate" autocomplete="off">
+          <input type="hidden" id="recordId" value="">
+          <div class="cert-grid">
+            <div class="form-column">
+              <span class="section-title">CHILD INFORMATION</span>
+              <div class="form-grid" style="margin-top:12px">
+                <label>CHILD NAME
+                  <input type="text" id="childName" required placeholder="e.g. Ahmad Ali" title="CHILD NAME - Enter full name">
+                </label>
+                <label>GURDIAN NAME
+                  <input type="text" id="guardianName" placeholder="e.g. Guardian full name" title="GURDIAN NAME - Guardian or parent name">
+                </label>
+                <label>BIRTHDAY
+                  <input type="date" id="birthday" required title="BIRTHDAY - Select date of birth">
+                </label>
+                <label>CHILD ID
+                  <input type="text" id="childId" required placeholder="Unique child identifier" title="CHILD ID - Unique identifier">
+                </label>
+                <label>PHONE
+                  <input type="tel" id="childPhone" placeholder="Numbers only" title="PHONE - digits only">
+                </label>
+                <label>LOCATION
+                  <input type="text" id="location" placeholder="City / Area" title="LOCATION - Child location">
+                </label>
+              </div>
+
+              <span class="section-title" style="margin-top:18px">ADOPTION INFO</span>
+              <div style="margin-top:12px">
+                <div class="form-grid">
+                  <label>اختر كفيل موجود
+                    <select id="existingSponsor">
+                      <option value="new">-- كفيل جديد --</option>
+                    </select>
+                  </label>
+                  <label>DONAR NAME
+                    <input type="text" id="donorName" placeholder="Donor full name" title="DONAR NAME - Name of donor">
+                  </label>
+                  <label>DONAR PHONE
+                    <input type="tel" id="donorPhone" placeholder="Numbers only" title="DONAR PHONE - Donor phone (digits only)">
+                  </label>
+                </div>
+                <label style="margin-top:12px">ADDRESS
+                  <textarea id="donorAddress" rows="2" placeholder="Donor address" title="ADDRESS - Donor address"></textarea>
+                </label>
+                <label style="margin-top:8px;display:block">صورة الكفيل (اختياري)
+                  <input type="file" id="sponsorImage" accept="image/*" style="display:block;margin-top:8px">
+                </label>
+              </div>
+
+              <div class="form-actions" style="margin-top:18px">
+                <button id="saveBtn" type="submit" class="btn primary large" disabled>حفظ</button>
+                <button type="button" id="resetBtn" class="btn">إعادة تعيين</button>
+                <button type="button" id="editBtn" class="btn" style="display:none" title="Edit">✎</button>
+                <button type="button" id="deleteBtn" class="btn danger" style="display:none" title="Delete">حذف</button>
+              </div>
+
+              <div id="formMsg" class="saved-msg" aria-live="polite" style="display:none;margin-top:12px"></div>
+
+              <div class="progress" id="saveProgress" style="display:none"><div class="bar" id="saveProgressBar"></div></div>
+            </div>
+
+            <div class="photo-column">
+              <div class="photo-circle" id="photoPreview">
+                <img id="previewImg" src="assets/default-profile.svg" alt="child image" onerror="this.style.display='none'">
+              </div>
+              
+              <div style="position:absolute;right:24px;top:220px;z-index:3">
+                <label class="file-label btn" style="background:#fff;color:var(--green);border-radius:6px;padding:8px 10px;cursor:pointer">📷 CHILD IMAGE
+                  <input type="file" id="childImage" accept="image/*" style="display:none" title="📷 CHILD IMAGE - Upload photo">
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div class="diagonal-footer" aria-hidden="true">
+          <div class="bg"></div>
+          <div class="content">
+            <div style="font-size:20px;font-weight:800">CONTACT INFORMATION</div>
+            <div class="contact-badges">
+              <div class="badge">📞 03070433414</div>
+              <div class="badge">📞 03253417595</div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
